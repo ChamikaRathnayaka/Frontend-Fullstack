@@ -9,16 +9,16 @@ export default function ViewUser() {
     email: "",
   });
 
-  const { id } = useParams();
+//   const { id } = useParams();
 
 //   useEffect(() => {
 //     loadUser();
 //   }, []);
 
-  const loadUser = async () => {
-    const result = await axios.get(`http://localhost:8080/user/${id}`);
-    setUser(result.data);
-  };
+//   const loadUser = async () => {
+//     const result = await axios.get(`http://localhost:8080/user/${id}`);
+//     setUser(result.data);
+//   };
 
   return (
     <div className="container">
