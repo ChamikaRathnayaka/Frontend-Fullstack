@@ -14,6 +14,19 @@ export default function AddUser() {
     email: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    username: "",
+    email: "",
+  });
+
+  const isValidEmail = (email) => {
+    // Regular expression pattern for email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+
   const { name, username, email } = user;
 
   const onInputChange = (e) => {
@@ -23,6 +36,61 @@ export default function AddUser() {
   const onSubmit=async(e)=>{
     console.log("worked.......................")
     e.preventDefault();
+
+    let hasErrors = false;
+    const newErrors = {};
+
+    // Validate each field
+    if (user.name.trim() === "") {
+      newErrors.name = "Name is required.";
+      hasErrors = true;
+    }
+    if (user.name.length > 10) {
+      newErrors.name = "Name should be less than 10 characters";
+      hasErrors = true;
+    }
+    else if (/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(user.name)) {
+      newErrors.name = 'Name should not start with special characters.';
+      hasErrors = true;
+    }
+    else if (/\d/.test(user.name)) {
+      newErrors.name = 'name should not contain integers.';
+      hasErrors = true;
+    }
+
+    if (user.username.trim() === "") {
+      newErrors.username = "Username is required.";
+      hasErrors = true;
+    }
+    else if (user.username.length > 20 ){
+      newErrors.username = 'User name should be less than characters';
+      hasErrors = true;
+    }
+    else if (/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(user.username)) {
+      newErrors.username = 'User Name should not start with special characters.';
+      hasErrors = true;
+    }
+    else if (/\d/.test(user.username)) {
+      newErrors.username = 'Username should not contain integers.';
+      hasErrors = true;
+    }
+
+    if (user.email.trim() === "") {
+      newErrors.email = "Email is required.";
+      hasErrors = true;
+    } else if (!isValidEmail(user.email)) {
+      newErrors.email = "Email is invalid.";
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Proceed with form submission
+    console.log("Form submitted:", user);
+
     await axios.post("http://localhost:8090/user",user);
     navigate("/")
   };
@@ -46,6 +114,9 @@ export default function AddUser() {
                 value={name}
                 onChange={(e) => onInputChange(e)}
               />
+               {errors.name && (
+                <span className="text-danger">{errors.name}</span>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Username" className="form-label">
@@ -59,6 +130,9 @@ export default function AddUser() {
                 value={username}
                 onChange={(e) => onInputChange(e)}
               />
+               {errors.username && (
+                <span className="text-danger">{errors.username}</span>
+              )}
             </div>
             <div className="mb-3">
               <label htmlFor="Email" className="form-label">
@@ -72,6 +146,9 @@ export default function AddUser() {
                 value={email}
                 onChange={(e) => onInputChange(e)}
               />
+              {errors.email && (
+                <span className="text-danger">{errors.email}</span>
+              )}
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Submit

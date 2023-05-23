@@ -56,6 +56,10 @@ export default function EditUser() {
       newErrors.name = 'Name should not start with special characters.';
       hasErrors = true;
     }
+    else if (/\d/.test(user.name)) {
+      newErrors.name = 'Username should not contain integers.';
+      hasErrors = true;
+    }
 
     if (user.username.trim() === "") {
       newErrors.username = "Username is required.";
@@ -67,6 +71,10 @@ export default function EditUser() {
     }
     else if (/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(user.username)) {
       newErrors.username = 'User Name should not start with special characters.';
+      hasErrors = true;
+    }
+    else if (/\d/.test(user.username)) {
+      newErrors.username = 'Username should not contain integers.';
       hasErrors = true;
     }
 
